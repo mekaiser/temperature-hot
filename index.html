@@ -1,0 +1,94 @@
+<!-- Temperature Hot openweathermap api -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background: url(images/bg-image.jpg) no-repeat;
+        background-size: cover;
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <form class="col-md-6 m-auto py-5">
+        <div class="input-group mb-3">
+          <input
+            id="enter-city"
+            type="text"
+            class="form-control"
+            placeholder="Enter a location for Weather ..."
+          />
+          <div class="input-group-append">
+            <button id="search-btn" type="button" class="btn btn-danger">
+              Search
+            </button>
+          </div>
+        </div>
+      </form>
+      <div class="weather-status text-white text-center">
+        <img
+          id="weather-icon"
+          src="https://openweathermap.org/img/wn/02d@2x.png"
+          alt=""
+        />
+        <h1 id="updated-city-name">Dhaka</h1>
+        <h3><span id="updated-temp">38.06</span>&deg;C</h3>
+        <h1 id="updated-weather-status" class="lead">Clouds</h1>
+      </div>
+    </div>
+  </body>
+  <script>
+    function weatherReport(cityName) {
+      const key = "6dcac37bb46d7d783c4b442eb5736b10";
+      fetch(
+        "https://api.openweathermap.org/data/2.5/weather?q=" +
+          cityName +
+          "&units=metric" +
+          "&appid=" +
+          key
+      )
+        .then((resp) => {
+          return resp.json();
+        }) // Convert data to json
+        .then((data) => {
+          console.log(data);
+          document.getElementById("updated-city-name").innerText = data.name;
+          document.getElementById("updated-temp").innerText = data.main.temp;
+          document.getElementById("updated-weather-status").innerText =
+            data.weather[0].description;
+          const weatherIconCode = data.weather[0].icon;
+          updateWeatherIcon(weatherIconCode);
+        })
+        .catch((error) => {
+          console.log(error); // catch any errors
+        });
+    }
+    const passCity = () => {
+      const enteredCityName = document.getElementById("enter-city").value;
+      weatherReport(enteredCityName);
+    };
+    const updateWeatherIcon = (weatherIconCode) => {
+      document.getElementById(
+        "weather-icon"
+      ).src = `http://openweathermap.org/img/w/${weatherIconCode}.png`;
+    };
+    document.getElementById("search-btn").addEventListener("click", passCity);
+  </script>
+</html>
